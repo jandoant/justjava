@@ -69,7 +69,7 @@
                 android:id="@+id/btn_removeCoffee"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:onClick="removeCoffee"
+                android:onClick="OnRemoveCoffee"
                 android:text="-" />
 
             <TextView
@@ -86,7 +86,7 @@
                 android:id="@+id/btn_addCoffee"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:onClick="addCoffee"
+                android:onClick="OnAddCoffee"
                 android:text="+" />
         </LinearLayout>
 
@@ -113,7 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:onClick="submitOrder"
+            android:onClick="OnSubmitOrder"
             android:text="Order" />
     </LinearLayout>
 </ScrollView>

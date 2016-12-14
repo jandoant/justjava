@@ -1,5 +1,6 @@
 package com.gmail.jandoant.justjava;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,7 +10,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int numberOfCoffees, pricePerCoffee, price;
+    private int numberOfCoffees, pricePerCoffee, pricePerCream, pricePerChocolate, price;
     private EditText editText_clientName;
     private TextView txt_quantity, txt_order;
     private CheckBox chkBox_cream, chkBox_chocolate;
@@ -23,8 +24,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //initial Values
-        numberOfCoffees = 2;
+        numberOfCoffees = 0;
         pricePerCoffee = 5;
+        pricePerCream = 1;
+        pricePerChocolate = 2;
         clientName = null;
 
         //initUI
@@ -36,9 +39,22 @@ public class MainActivity extends AppCompatActivity {
         displayQuantity();
     }
 
-    public void submitOrder(View view) {
+    public void OnSubmitOrder(View view) {
         assembleOrder();
-        displayOrderSummary();
+        //displayOrderSummary();
+        sendOrderMail();
+    }
+
+    private void sendOrderMail() {
+        String orderMessage = "<h1>" + createOrderMessage() + "</h1>";
+
+        //Impliziter Intent um Bestellung als Mail zu verschicken
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Coffee Order");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, orderMessage);
+        sendIntent.setType("text/html");
+        startActivity(sendIntent);
+
     }
 
     private void assembleOrder() {
@@ -48,12 +64,26 @@ public class MainActivity extends AppCompatActivity {
         calulatePrice();
     }
 
-    public void addCoffee(View view) {
+    private String createOrderMessage() {
+
+        String orderMessage = "";
+
+        orderMessage += "Name: " + clientName + "\n";
+        orderMessage += "Add Whipped Cream? " + hasWhippedCream + "\n";
+        orderMessage += "Add Chocolate? " + hasChocolate + "\n";
+        orderMessage += "Quantity: " + numberOfCoffees + "\n";
+        orderMessage += "Total: " + price + "$\n";
+        orderMessage += "Thank you!";
+
+        return orderMessage;
+    }
+
+    public void OnAddCoffee(View view) {
         numberOfCoffees++;
         displayQuantity();
     }
 
-    public void removeCoffee(View view) {
+    public void OnRemoveCoffee(View view) {
 
         //keine negativen Kaffeemengen
         if (numberOfCoffees <= 1) {
@@ -66,26 +96,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calulatePrice() {
-        //Pure Coffee Price
-        price = numberOfCoffees * pricePerCoffee;
         //Extra Charge
         if (hasWhippedCream) {
-            price += 1;
+            pricePerCoffee += pricePerCream;
         }
         if (hasChocolate) {
-            price += 2;
+            pricePerCoffee += pricePerChocolate;
         }
+        //Complete Coffee Price
+        price = numberOfCoffees * pricePerCoffee;
     }
 
     private void displayOrderSummary() {
-
-        txt_order.setText(
-                "Name: " + clientName + "\n" +
-                        "Add Whipped Cream? " + hasWhippedCream + "\n" +
-                        "Add Chocolate? " + hasChocolate + "\n" +
-                        "Quantity: " + numberOfCoffees + "\n" +
-                        "Total: " + price + "$\n" +
-                        "Thank you!");
+        txt_order.setText(createOrderMessage());
     }
 
     private void displayQuantity() {

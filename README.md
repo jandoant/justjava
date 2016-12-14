@@ -22,3 +22,4 @@
 * Scroll View added
 * Text Input Field for username added
 * Extra Charge for Chocolate and Cream implemented
+* Intent um Bestellungsmail zu versenden
